@@ -1,0 +1,14 @@
+{
+  "key" : "test_item",
+  "tab" : "misc",
+  "rarity" : "epic",
+  "maxStackSize" : 1
+  /*"hitEntity" : {
+    "parameters" : {
+      "ItemStack" : "stack",
+      "LivingEntity" : "target",
+      "LivingEntity" : "attack"
+    },
+    "body" : "return false;"
+  }*/
+}

@@ -1,0 +1,8 @@
+{
+  "key" : "test_item_2",
+  "properties" : {
+    "group" : "misc",
+    "rarity" : "epic",
+    "maxStackSize" : 1
+  }
+}
