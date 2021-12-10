@@ -8,15 +8,11 @@ version="${file.jarVersion}" #mandatory
 displayName="Custom Registry" #mandatory
 updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
-logoFile="examplemod.png" #optional
-credits="Thanks for this example mod goes to Java" #optional
-authors="Love, Cheese and small house plants" #optional
+logoFile="custom_registry.png" #optional
+credits="Stuff" #optional
+authors="fallOut015" #optional
 description='''
-This is a long form description of the mod. You can write whatever you want here
-
-Have some lorem ipsum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sagittis luctus odio eu tempus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque volutpat ligula eget lacus auctor sagittis. In hac habitasse platea dictumst. Nunc gravida elit vitae sem vehicula efficitur. Donec mattis ipsum et arcu lobortis, eleifend sagittis sem rutrum. Cras pharetra quam eget posuere fermentum. Sed id tincidunt justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+A mod that allows you to add items as .json files!
 '''
 [[dependencies.custom_registry]] #optional
     modId="forge" #mandatory

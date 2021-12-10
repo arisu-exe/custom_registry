@@ -15,11 +15,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ItemsCustomRegistry extends CustomRegistry<Item> {
     final private DeferredRegister<Item> items;
@@ -84,7 +81,7 @@ public class ItemsCustomRegistry extends CustomRegistry<Item> {
         }
         if(object.has("tab")) {
             // TODO (replace with cross-mod capable code eventually)
-            properties.tab(Arrays.stream(CreativeModeTab.TABS).filter(creativeModeTab -> {
+            /*properties.tab(Arrays.stream(CreativeModeTab.TABS).filter(creativeModeTab -> {
                 try {
                     Field langId = CreativeModeTab.class.getDeclaredField("langId");
                     boolean notAccessible = !langId.canAccess(creativeModeTab);
@@ -102,7 +99,7 @@ public class ItemsCustomRegistry extends CustomRegistry<Item> {
                     exception.printStackTrace();
                 }
                 return false;
-            }).collect(Collectors.toList()).get(0));
+            }).collect(Collectors.toList()).get(0));*/
         }
         if(object.has("rarity")) {
             properties.rarity(Rarity.valueOf(object.get("rarity").getAsString()));
