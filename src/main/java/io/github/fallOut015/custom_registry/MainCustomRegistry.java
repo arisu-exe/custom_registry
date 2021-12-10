@@ -28,6 +28,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+Support zips
+Only load if in client and save folder
+Add registrypack browser
+modpacks that contain registrypacks, resourcepacks, and/or datapacks
+add in-game modpack GUI generator
+ */
+
 @Mod(MainCustomRegistry.MODID)
 public class MainCustomRegistry {
     private static final List<CustomRegistry<?>> CUSTOM_REGISTRIES;

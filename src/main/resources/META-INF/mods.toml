@@ -5,14 +5,14 @@ issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #opti
 [[mods]] #mandatory
 modId="custom_registry" #mandatory
 version="${file.jarVersion}" #mandatory
-displayName="Custom Registry" #mandatory
+displayName="Custom Registry (Forge)" #mandatory
 updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 logoFile="custom_registry.png" #optional
 credits="Stuff" #optional
 authors="fallOut015" #optional
 description='''
-A mod that allows you to add items as .json files!
+A mod that allows you to add items, blocks, and more as .json files!
 '''
 [[dependencies.custom_registry]] #optional
     modId="forge" #mandatory

@@ -5,9 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -122,6 +120,8 @@ public class Serializers {
             }
             return item$properties;
         }));
+
+        CLASS_MAP.put(Tier.class, new Serializer<>(jsonElement -> Tiers.valueOf(jsonElement.getAsString())));
     }
 
     public static Serializer<?> getSerializer(Class<?> clazz) {
