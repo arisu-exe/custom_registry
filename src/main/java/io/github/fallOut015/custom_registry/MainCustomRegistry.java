@@ -28,10 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
-Registry packs are loaded server-side and client-side, so they are put in the local .minecraft folder and the world folder
- */
-
 @Mod(MainCustomRegistry.MODID)
 public class MainCustomRegistry {
     private static final List<CustomRegistry<?>> CUSTOM_REGISTRIES;
