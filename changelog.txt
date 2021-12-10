@@ -1,3 +1,351 @@
+Build: 1.17.1-37.1.0 - Tue Nov 30 16:58:27 GMT 2021
+	lexmanos:
+		Bump version for final RB of 1.17's lifecycle. Move on to 1.18!
+
+=========
+Build: 1.17.1-37.0.127 - Tue Nov 30 16:44:02 GMT 2021
+	lexmanos:
+		Fix LiquidBlock's fluid field not being redirected to the supplier getFluid. Closes #7922
+
+=========
+Build: 1.17.1-37.0.126 - Thu Nov 25 21:10:10 GMT 2021
+	sciwhiz12:
+		[1.17.x Omnibus] Fix typos and javadocs across code base (#8144)
+
+=========
+Build: 1.17.1-37.0.125 - Thu Nov 25 20:30:40 GMT 2021
+	uSkizzik:
+		Fix Spectating Part Entity (MC-46486) (#8206)
+
+	ateranimavis:
+		Fix /forge setdimension command arguments not parsing/suggesting correctly.
+
+=========
+Build: 1.17.1-37.0.123 - Thu Nov 25 20:17:03 GMT 2021
+	paintninja:
+		Use HttpClient for VersionChecker (#8148)
+
+=========
+Build: 1.17.1-37.0.122 - Thu Nov 25 20:03:19 GMT 2021
+	Harleyoc1:
+		Changed control flow of post mouse events to allow listening to events handled by vanilla. (#8133)
+
+=========
+Build: 1.17.1-37.0.121 - Thu Nov 25 19:13:10 GMT 2021
+	sciwhiz12:
+		Deprecate durability bar methods in Item extension (#8214)
+		
+		To retain compatibility with existing mods, the vanilla methods redirect
+		to the extension methods for now.
+		
+		Users should now use and override the vanilla methods as directed in
+		the javadocs of the now-deprecated methods, as the extension methods
+		will be removed in the future.
+		
+		Fixes #8201
+
+=========
+Build: 1.17.1-37.0.120 - Thu Nov 25 18:59:09 GMT 2021
+	sciwhiz12:
+		Reorder image tooltip component to match vanilla (#8213)
+		
+		Fixes #8212
+
+=========
+Build: 1.17.1-37.0.119 - Thu Nov 25 10:14:28 GMT 2021
+	contact:
+		Fix render pipeline lighting issue with small cubes (#8158)
+		
+		This will also allow other mods which need to calculate small normalised vectors to be able to use the default classes without needing to write their own, while not effecting any side effects created by how the base game uses this function.
+
+=========
+Build: 1.17.1-37.0.118 - Thu Nov 25 02:03:27 GMT 2021
+	championash5357:
+		Fixes infinite loop when dismounting in `EntityMountEvent` (#8114)
+
+=========
+Build: 1.17.1-37.0.117 - Wed Nov 24 21:54:07 GMT 2021
+	ichttt:
+		Fix onChunkUnloaded not gettting called correctly (#8103)
+
+=========
+Build: 1.17.1-37.0.116 - Wed Nov 24 01:16:10 GMT 2021
+	daemonumbra:
+		Fix potential issue with BackgroundScanHandler for users with slow disc IO (#8176)
+
+	diesieben07:
+		Fix death message for tamed animals not having proper cause of death. (#8196)
+
+=========
+Build: 1.17.1-37.0.114 - Wed Nov 24 01:02:40 GMT 2021
+	telepathicgrunt:
+		Make WorldEvent.Load run for Overworld before chunk creation like other dimensions (#8167)
+
+=========
+Build: 1.17.1-37.0.113 - Wed Nov 24 00:48:00 GMT 2021
+	platinpython:
+		Deprecate net.minecraftforge.common.util.Constants and inner classes to encourage usage of vanilla constants (#8140)
+
+=========
+Build: 1.17.1-37.0.112 - Sun Nov 21 18:26:44 GMT 2021
+	supermartijn642:
+		[1.17.x] Change expected type of LootTable fields to arrays (#8194)
+		
+		#8184 reverted some LootTable patches, including the types of fields `f_79023_` and `f_79024_`. However, `ForgeLootTableProvider` still expects a list, however the type of the fields is an array now.
+		This PR changes the expected type in `ForgeLootTableProvider` to an array as well.
+
+=========
+Build: 1.17.1-37.0.111 - Sun Nov 21 12:29:14 GMT 2021
+	melanx:
+		Apply window resizing to all gui layers (#8207)
+
+=========
+Build: 1.17.1-37.0.110 - Sat Nov 20 15:54:24 GMT 2021
+	minecraftschurli:
+		[1.17.x] make ScrollPanel better usable by modders (#8179)
+
+=========
+Build: 1.17.1-37.0.109 - Sat Nov 13 01:25:58 GMT 2021
+	lexmanos:
+		Update installer to 2.1.+ so we don't have to bump it in the future.
+
+=========
+Build: 1.17.1-37.0.108 - Wed Nov 10 20:18:07 GMT 2021
+	championash5357:
+		Remove Old LootPool Patches (#8184)
+
+=========
+Build: 1.17.1-37.0.107 - Tue Nov 09 22:31:15 GMT 2021
+	minecraftschurli:
+		Fix the hopefully last issue with GAMELIBRARY loading (#8162)
+
+	ichttt:
+		Remove the remnants of the selective reload listener (#8072)
+
+=========
+Build: 1.17.1-37.0.105 - Tue Nov 09 22:17:00 GMT 2021
+	uSkizzik:
+		Fix part entities not working at all (#8177)
+
+=========
+Build: 1.17.1-37.0.104 - Sun Oct 31 11:26:47 GMT 2021
+	xfacthd:
+		Pass IModelData through IForgeBakedModel#getModelData() before asking the BakedModel for the particle texture (#8106)
+
+=========
+Build: 1.17.1-37.0.103 - Wed Oct 20 19:23:46 GMT 2021
+	xfacthd:
+		Fix blocks with flammable material catching fire from lava when they are marked as non-flammable (#8160)
+
+=========
+Build: 1.17.1-37.0.102 - Wed Oct 20 19:10:23 GMT 2021
+	xfacthd:
+		Add accessor to an unmodifiable view of the fullPots map in FlowerPotBlock (#8108)
+
+	championash5357:
+		Fix Breaking waterlogged blocks occasionally displays air for a frame Closes #7253 (#8128)
+
+	djbake101:
+		Add "forge:enchanting_materials" tag in place of Lapis in the Enchanting Table (#8149)
+
+	35673674+alcatrazescapee:
+		Add `BiomeDictionary#hasType(String)` (#8157)
+
+=========
+Build: 1.17.1-37.0.98 - Wed Oct 20 18:56:43 GMT 2021
+	championash5357:
+		Fix Behavior With Unknown Items in Recipes (#8105)
+
+=========
+Build: 1.17.1-37.0.97 - Sun Oct 17 23:29:15 GMT 2021
+	lexmanos:
+		Disable jenkins cache system until a functional system is in place.
+
+	diesieben07:
+		Fix another crash with new tooltip events (#8155)
+		
+		* Fix another crash with new tooltip events
+		* Add ItemStack context to ghost recipe tooltip events
+		* Expand Tooltip Event test mod to add a screen to test all tooltip render methods
+
+=========
+Build: 1.17.1-37.0.95 - Fri Oct 15 03:23:39 GMT 2021
+	championash5357:
+		Add entity source to PotionAddedEvent (#8147)
+
+=========
+Build: 1.17.1-37.0.94 - Fri Oct 15 03:12:02 GMT 2021
+	35673674+alcatrazescapee:
+		Add ATs for world generation extensibility, focusing on `NoiseBasedChunkGenerator`, `NoiseSampler`, `NoiseBasedAquifer`, and `Beardifier` (#8087)
+
+	dev:
+		Fix Entity#onAddedToWorld not being called for non-player entities server-side (#8134)
+
+	Mato.dipcar:
+		Add helper methods to generate blockstate and models for button, pressure plate, sign to BlockStateProvider/ModelProvider (#8139)
+
+=========
+Build: 1.17.1-37.0.91 - Fri Oct 15 03:00:33 GMT 2021
+	Unbekannt1998:
+		Make AdvancementProvider extensible by modders (#8120)
+
+=========
+Build: 1.17.1-37.0.90 - Wed Oct 13 19:51:35 GMT 2021
+	lexmanos:
+		Skip loading jars with neither a manifest, nore a mods.toml.
+		Deprecate helper functions related to ModFile/Metadata.
+		Mark ModFileFactory as to be removed from our usage.
+		It may be useful for other loaders, but introduces a weird level of indirection that makes things a pain.
+		If there are consumers of this API please leave feedback before the next major mc version so we can be sure to provide something useful.
+
+=========
+Build: 1.17.1-37.0.89 - Wed Oct 13 19:19:40 GMT 2021
+	lexmanos:
+		Fix mods with both a manifest and a mods.toml have mismatched module names.
+
+=========
+Build: 1.17.1-37.0.88 - Wed Oct 13 12:02:44 GMT 2021
+	diesieben07:
+		Fix missing toolTip methods in Screen (#8154)
+
+=========
+Build: 1.17.1-37.0.87 - Wed Oct 13 08:59:14 GMT 2021
+	diesieben07:
+		Fix render tooltip render patch (#8153)
+
+=========
+Build: 1.17.1-37.0.86 - Wed Oct 13 01:49:43 GMT 2021
+	lexmanos:
+		Attempt to fix non-mods.toml jar files. Closes #8136 #8146 #8152
+		Make jenkins copy gradle cache to address concurrent build issues.
+
+=========
+Build: 1.17.1-37.0.85 - Mon Oct 11 18:37:30 GMT 2021
+	diesieben07:
+		Tooltip event rewrite (#8038)
+		
+		Redesigns the tooltip events, and adds a feature where mods can register factories for ClientTooltipComponents, which are used for custom rendering in tooltips. The old events are maintained for binary compatibility.
+
+=========
+Build: 1.17.1-37.0.84 - Fri Oct 08 06:50:36 GMT 2021
+	xfacthd:
+		Add ForgeSpawnEggItem to lazily handle EntityTypes (#8044)
+
+=========
+Build: 1.17.1-37.0.83 - Thu Oct 07 20:32:10 GMT 2021
+	xfacthd:
+		Reimplement IForgeBlockEntity#onLoad() hook (#7946)
+
+=========
+Build: 1.17.1-37.0.82 - Tue Oct 05 02:16:13 GMT 2021
+	gigaherz:
+		Implement GUI Stacking feature. (#8130)
+		
+		You can now use `mc.pushGuiLayer` and `mc.popGuiLayer` to manage the layers.
+		mc.setScreen behaves such that if called with a non-null screen it replaces the entire stack, and if called with null it closes the entire stack.
+
+=========
+Build: 1.17.1-37.0.81 - Mon Oct 04 22:10:17 GMT 2021
+	gigaherz:
+		Add ability for people to add custom pack finders (RepositorySources) (#8121)
+		
+		Added AddPackFindersEvent which lets you add additional resource/data pack sources to the game.
+		Added PathResourcePack as a utility to allow easy providing of a subfolder in a mod as a resource pack.
+
+=========
+Build: 1.17.1-37.0.80 - Mon Oct 04 21:43:22 GMT 2021
+	onelemonyboi:
+		Prevent Block/Entity data side leak on integrated servers by copying custom data before writing. #8111
+
+	diesieben07:
+		Added EntityEvent.EnteringSection event to replace EnteringChunk event. (#8078)
+
+=========
+Build: 1.17.1-37.0.78 - Sun Oct 03 18:12:16 GMT 2021
+	alex.leo.barter:
+		Fix breaking block particles not respecting IModelData (#8065)
+		
+		The sprite used for the block particles needs updating after the constructor otherwise it defaults to the texture sprite returned from passing ModelData.INSTANCE to get IForgeBakedModel#getParticleIcon. Calling updateSprite fetches the real IModelData instance for that blockstate/pos and sets the texture to the desired one
+
+	sciwhiz12:
+		Re-implement linear filtering text render types (#8052)
+		
+		* Re-implement linear filtering text render types
+		
+		Implements and closes #7996
+
+=========
+Build: 1.17.1-37.0.76 - Sun Oct 03 18:00:24 GMT 2021
+	github:
+		Fix Signs breaking with custom `WoodType`s (#8132)
+
+=========
+Build: 1.17.1-37.0.75 - Fri Oct 01 20:21:24 GMT 2021
+	lexmanos:
+		Bump SJH version. Closes #8127
+		Attempt addressing loading libraries during dev time, and bump SPI version introducing GAMELIBRARY type. #7976 #7957 #8090
+
+=========
+Build: 1.17.1-37.0.74 - Fri Oct 01 05:54:38 GMT 2021
+	lexmanos:
+		Capability rework to get rid of @CapabilityInject and use CapabilityToken as the identifier, deprecated old system for removal in 1.18. (#8116)
+
+=========
+Build: 1.17.1-37.0.73 - Mon Sep 27 19:59:19 GMT 2021
+	onelemonyboi:
+		Fix pet death message being sent when pet death event is canceled. (#8110)
+
+=========
+Build: 1.17.1-37.0.72 - Mon Sep 27 19:26:34 GMT 2021
+	rikka0w0:
+		[1.17.x] implements canConnectRedstone(), Redstone dust now defers to the blockstate for determining connectivity (#8014)
+
+=========
+Build: 1.17.1-37.0.71 - Fri Sep 24 21:10:52 GMT 2021
+	sciwhiz12:
+		Prevent call to Item#initializeClient when in datagen (#8097)
+		
+		When running under data-generation, the Minecraft singleton is unavailable
+		even though the operating env is under the CLIENT dist. Adding this check
+		prevents crashes from devs unaware of this, as most uses of
+		IItemRenderProperties (usually for a custom BEWLR) make use of the
+		Minecraft singleton and therefore will cause NPEs if not guarded against.
+		
+		A similar thing happens in MobEffect and Block.
+
+=========
+Build: 1.17.1-37.0.70 - Sun Sep 19 23:36:14 GMT 2021
+	sciwhiz12:
+		Move ItemStack#forgeInit call earlier to allow earlier capability queries (#8096)
+
+=========
+Build: 1.17.1-37.0.69 - Sun Sep 19 02:42:47 GMT 2021
+	sciwhiz12:
+		Remove incorrect FallingBlock patch (#8092)
+		
+		The patch accidentally replaces the minimum build height (set by the
+		dimension via e.g. datapacks) with 0, causing falling blocks placed
+		below Y level 0 to never fall.
+		
+		Fixes #8091
+
+=========
+Build: 1.17.1-37.0.68 - Sat Sep 18 21:58:41 GMT 2021
+	sciwhiz12:
+		Fix inverted hooks for PermissionsChangedEvent (#8089)
+		
+		Because IEventBus#post returns true on cancellation and the patched-in
+		hooks inverts the return of the ForgeHooks method, if the player
+		whose permission level is being changed is online and the event is not
+		cancelled, the permission change _is_ cancelled.
+		
+		The fix is inverting the patched-in hooks and the default return value
+		of the ForgeHooks method, so that the permission change is cancelled
+		only if the player is online, the event is fired, and the event is cancelled.
+		
+		Fixes #8088
+
+=========
 Build: 1.17.1-37.0.67 - Fri Sep 17 20:26:19 GMT 2021
 	oriondevelopment:
 		Add the missing patch for ItemStack for last build. (#8085)
