@@ -1,16 +1,42 @@
 package io.github.fallOut015.custom_registry.registries;
 
+import com.google.gson.JsonElement;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public abstract class CustomRegistry<T extends IForgeRegistryEntry<T>> implements ICustomRegistry<T> {
-    final String modid;
+import javax.annotation.Nullable;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-    public CustomRegistry(final String modid) {
+public class CustomRegistry<T extends IForgeRegistryEntry<T>> {
+    final String modid;
+    final IForgeRegistry<T> forgeRegistry;
+    final private DeferredRegister<T> deferredRegister;
+    final Function<JsonElement, Supplier<T>> jsonParser;
+
+    public CustomRegistry(final String modid, final IForgeRegistry<T> forgeRegistry, final Function<JsonElement, Supplier<T>> jsonParser) {
         this.modid = modid;
+        this.forgeRegistry = forgeRegistry;
+        this.deferredRegister = DeferredRegister.create(this.getType(), this.getModid());
+        this.jsonParser = jsonParser;
     }
 
-    @Override
     public String getModid() {
         return this.modid;
+    }
+    public IForgeRegistry<T> getType() {
+        return this.forgeRegistry;
+    }
+    public void register(IEventBus bus) {
+        this.deferredRegister.register(bus);
+    }
+    public void registerJson(final String name, final @Nullable JsonElement jsonElement) {
+        assert jsonElement != null;
+        this.deferredRegister.register(name, this.parseJSON(jsonElement));
+    }
+    public Supplier<T> parseJSON(JsonElement jsonElement) {
+        return this.jsonParser.apply(jsonElement);
     }
 }

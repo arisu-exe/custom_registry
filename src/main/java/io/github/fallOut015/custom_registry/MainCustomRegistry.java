@@ -3,7 +3,8 @@ package io.github.fallOut015.custom_registry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import io.github.fallOut015.custom_registry.registries.ICustomRegistry;
+import io.github.fallOut015.custom_registry.registries.CustomRegistries;
+import io.github.fallOut015.custom_registry.registries.CustomRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +34,7 @@ Registry packs are loaded server-side and client-side, so they are put in the lo
 
 @Mod(MainCustomRegistry.MODID)
 public class MainCustomRegistry {
-    private static final List<ICustomRegistry<?>> CUSTOM_REGISTRIES;
+    private static final List<CustomRegistry<?>> CUSTOM_REGISTRIES;
     public static final String MODID = "custom_registry";
 
     static {
@@ -65,12 +66,12 @@ public class MainCustomRegistry {
                         if(registries != null) {
                             for(String registry : registries) {
                                 System.out.println("\t\t\tLoading registry " + registry);
-                                ICustomRegistry<?> customRegistry;
+                                CustomRegistry<?> customRegistry;
                                 boolean registryExists = CUSTOM_REGISTRIES.stream().anyMatch(iCustomRegistry -> iCustomRegistry.getModid().equals(namespace) && iCustomRegistry.getType().equals(RegistryManager.ACTIVE.getRegistry(new ResourceLocation(registry))));
                                 if(registryExists) {
                                     customRegistry = CUSTOM_REGISTRIES.stream().filter(iCustomRegistry -> iCustomRegistry.getModid().equals(namespace) && iCustomRegistry.getType().equals(RegistryManager.ACTIVE.getRegistry(new ResourceLocation(registry)))).collect(Collectors.toList()).get(0);
                                 } else {
-                                    customRegistry = ICustomRegistry.constructGet(new ResourceLocation(registry), namespace);
+                                    customRegistry = CustomRegistries.constructGet(new ResourceLocation(registry), namespace);
                                     CUSTOM_REGISTRIES.add(customRegistry);
                                 }
                                 try {
