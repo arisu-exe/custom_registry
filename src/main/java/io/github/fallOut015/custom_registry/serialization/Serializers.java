@@ -7,13 +7,20 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -359,6 +366,48 @@ public class Serializers {
             return new JsonPrimitive(t.toString());
         }, jsonElement -> {
             return Tiers.valueOf(jsonElement.getAsString());
+        });
+
+        register(Enchantment.Rarity.class, t -> {
+            return new JsonPrimitive(t.toString());
+        }, jsonElement -> {
+            return Enchantment.Rarity.valueOf(jsonElement.getAsString());
+        });
+
+        register(BlockBehaviour.Properties.class, t -> {
+            return new JsonObject();
+        }, jsonElement -> {
+            return BlockBehaviour.Properties.of(Serializers.deserialize(Material.class, jsonElement.getAsJsonObject().get("material")), Serializers.deserialize(MaterialColor.class, jsonElement.getAsJsonObject().get("color")));
+        });
+
+        register(Material.class, t -> {
+            return new JsonObject();
+        }, jsonElement -> {
+            return null;
+        });
+
+        register(MaterialColor.class, t -> {
+            return new JsonObject();
+        }, jsonElement -> {
+            return null;
+        });
+
+        register(ProtectionEnchantment.Type.class, t -> {
+            return new JsonPrimitive(t.toString());
+        }, jsonElement -> {
+            return ProtectionEnchantment.Type.valueOf(jsonElement.getAsString());
+        });
+
+        register(EquipmentSlot.class, t -> {
+            return new JsonPrimitive(t.toString());
+        }, jsonElement -> {
+            return EquipmentSlot.valueOf(jsonElement.getAsString());
+        });
+
+        register(EnchantmentCategory.class, t -> {
+            return new JsonPrimitive(t.toString());
+        }, jsonElement -> {
+            return EnchantmentCategory.valueOf(jsonElement.getAsString());
         });
     }
 

@@ -14,14 +14,12 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryManager;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -62,14 +60,6 @@ public class MainCustomRegistry {
                         if(registries != null) {
                             for(String registry : registries) {
                                 System.out.println("\t\t\tLoading registry " + registry);
-                                CustomRegistry<?> customRegistry;
-                                boolean registryExists = CUSTOM_REGISTRIES.stream().anyMatch(iCustomRegistry -> iCustomRegistry.getModid().equals(namespace) && iCustomRegistry.getType().equals(RegistryManager.ACTIVE.getRegistry(new ResourceLocation(registry))));
-                                if(registryExists) {
-                                    customRegistry = CUSTOM_REGISTRIES.stream().filter(iCustomRegistry -> iCustomRegistry.getModid().equals(namespace) && iCustomRegistry.getType().equals(RegistryManager.ACTIVE.getRegistry(new ResourceLocation(registry)))).collect(Collectors.toList()).get(0);
-                                } else {
-                                    customRegistry = CustomRegistries.constructGet(new ResourceLocation(registry), namespace);
-                                    CUSTOM_REGISTRIES.add(customRegistry);
-                                }
                                 try {
                                     Files.walk(Paths.get("registrypacks/" + registryPack + "/" + namespace + "/" + registry)).filter(Files::isRegularFile).forEach(path -> {
                                         JsonElement jsonElement = null;
@@ -79,7 +69,7 @@ public class MainCustomRegistry {
                                             e.printStackTrace();
                                         }
                                         System.out.println("\t\t\t\tRegistering " + namespace + ":" + FilenameUtils.removeExtension(path.getFileName().toString()));
-                                        customRegistry.registerJson(FilenameUtils.removeExtension(path.getFileName().toString()), jsonElement);
+                                        getOrMakeCustomRegistry(new ResourceLocation(registry), namespace).registerJson(FilenameUtils.removeExtension(path.getFileName().toString()), jsonElement);
                                     });
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -98,6 +88,18 @@ public class MainCustomRegistry {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static <T extends IForgeRegistryEntry<T>> CustomRegistry<T> getOrMakeCustomRegistry(ResourceLocation registry, String namespace) {
+        CustomRegistry<T> customRegistry;
+        boolean registryExists = CUSTOM_REGISTRIES.stream().anyMatch(iCustomRegistry -> iCustomRegistry.getModid().equals(namespace) && iCustomRegistry.getType().equals(RegistryManager.ACTIVE.getRegistry(registry)));
+        if(registryExists) {
+            customRegistry = (CustomRegistry<T>) CUSTOM_REGISTRIES.stream().filter(iCustomRegistry -> iCustomRegistry.getModid().equals(namespace) && iCustomRegistry.getType().equals(RegistryManager.ACTIVE.getRegistry(registry))).collect(Collectors.toList()).get(0);
+        } else {
+            customRegistry = CustomRegistries.constructGet(registry, namespace);
+            CUSTOM_REGISTRIES.add(customRegistry);
+        }
+        return customRegistry;
     }
 
     private void setup(final FMLCommonSetupEvent event) {

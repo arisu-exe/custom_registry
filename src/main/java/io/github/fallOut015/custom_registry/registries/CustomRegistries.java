@@ -1,11 +1,13 @@
 package io.github.fallOut015.custom_registry.registries;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import io.github.fallOut015.custom_registry.serialization.Serializers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
@@ -13,6 +15,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,137 +30,147 @@ public class CustomRegistries {
     static {
         TYPE_MAP = new HashMap<>();
 
-        register(ForgeRegistries.ITEMS, jsonElement -> {
-            JsonObject object = jsonElement.getAsJsonObject();
-
-            Class<?> c = null;
-            try {
-                c = object.has("class") ? Class.forName("net.minecraft.world.item." + object.get("class").getAsString()) : Item.class;
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            Class<?> finalC = c;
-
-            if(object.get("parameters").isJsonArray()) {
-                int size = object.get("parameters").getAsJsonArray().size();
-                Object[] parameters = new Object[size];
-                for(int i = 0; i < size; ++ i) {
-                    Class<?> parameterType = Objects.requireNonNull(finalC).getConstructors()[0].getParameterTypes()[i];
-                    if(parameterType.equals(int.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsInt();
-                    } else if(parameterType.equals(float.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsFloat();
-                    } else if(parameterType.equals(boolean.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsBoolean();
-                    } else if(parameterType.equals(byte.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsByte();
-                    } else if(parameterType.equals(char.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsCharacter();
-                    } else if(parameterType.equals(double.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsDouble();
-                    } else if(parameterType.equals(long.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsLong();
-                    } else if(parameterType.equals(short.class)) {
-                        parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsShort();
-                    } else {
-                        parameters[i] = Serializers.deserialize(parameterType, object.get("parameters").getAsJsonArray().get(i));
-                    }
-                }
-
-                return () -> {
-                    try {
-                        return (Item) Objects.requireNonNull(finalC).getConstructors()[0].newInstance(parameters);
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
+        register(ForgeRegistries.ITEMS, t -> {
+            JsonObject object = new JsonObject();
+            object.addProperty("class", t.get().getClass().getSimpleName());
+            return object;
+        }, jsonElement -> {
+            Class<?> clazz = getClass(jsonElement, "net.minecraft.world.item.", Item.class);
+            Constructor<?> constructor = Objects.requireNonNull(clazz).getConstructors()[0];
+            return () -> {
+                try {
+                    return (Item) (constructor.newInstance(getParameters(jsonElement, constructor)));
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
                     return null;
-                };
-            } else {
-                Object parameter;
-                Class<?> parameterType = Objects.requireNonNull(finalC).getConstructors()[0].getParameterTypes()[0];
-                if(parameterType.equals(int.class)) {
-                    parameter = object.get("parameters").getAsInt();
-                } else if(parameterType.equals(float.class)) {
-                    parameter = object.get("parameters").getAsFloat();
-                } else if(parameterType.equals(boolean.class)) {
-                    parameter = object.get("parameters").getAsBoolean();
-                } else if(parameterType.equals(byte.class)) {
-                    parameter = object.get("parameters").getAsByte();
-                } else if(parameterType.equals(char.class)) {
-                    parameter = object.get("parameters").getAsCharacter();
-                } else if(parameterType.equals(double.class)) {
-                    parameter = object.get("parameters").getAsDouble();
-                } else if(parameterType.equals(long.class)) {
-                    parameter = object.get("parameters").getAsLong();
-                } else if(parameterType.equals(short.class)) {
-                    parameter = object.get("parameters").getAsShort();
-                } else {
-                    parameter = Serializers.deserialize(parameterType, object.get("parameters").getAsJsonObject());
                 }
-
-                Object finalParameter = parameter;
-                return () -> {
-                    try {
-                        return (Item) Objects.requireNonNull(finalC).getConstructors()[0].newInstance(finalParameter);
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                };
-            }
+            };
         });
 
-        register(ForgeRegistries.BLOCKS, jsonElement -> () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)));
+        register(ForgeRegistries.BLOCKS, t -> JsonNull.INSTANCE, jsonElement -> {
+            Class<?> clazz = getClass(jsonElement, "net.minecraft.world.level.block.", Block.class);
+            Constructor<?> constructor = Objects.requireNonNull(clazz).getConstructors()[0];
+            return () -> {
+                try {
+                    return (Block) (constructor.newInstance(getParameters(jsonElement, constructor)));
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            };
+        });
 
-        register(ForgeRegistries.SOUND_EVENTS, jsonElement -> () -> new SoundEvent(new ResourceLocation("x")));
+        register(ForgeRegistries.SOUND_EVENTS, t -> JsonNull.INSTANCE, jsonElement -> () -> new SoundEvent(new ResourceLocation("x")));
 
-//      fluid
+        register(ForgeRegistries.FLUIDS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      mob_effect
+        register(ForgeRegistries.MOB_EFFECTS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      potion
+        register(ForgeRegistries.POTIONS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      attribute
+        register(ForgeRegistries.ATTRIBUTES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      stat_type
+        register(ForgeRegistries.STAT_TYPES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      enchantment
+        register(ForgeRegistries.ENCHANTMENTS, t -> JsonNull.INSTANCE, jsonElement -> {
+            Class<?> clazz = getClass(jsonElement, "net.minecraft.world.item.enchantment.", Enchantment.class);
+            Constructor<?> constructor = Objects.requireNonNull(clazz).getConstructors()[0];
+            return () -> {
+                try {
+                    return (Enchantment) (constructor.newInstance(getParameters(jsonElement, constructor)));
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            };
+        });
 
-//      entity_type
+        register(ForgeRegistries.ENTITIES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      motive
+        register(ForgeRegistries.PAINTING_TYPES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      particle_type
+        register(ForgeRegistries.PARTICLE_TYPES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      menu
+        register(ForgeRegistries.CONTAINERS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      block_entity_type
+        register(ForgeRegistries.BLOCK_ENTITIES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      recipe_serializer
+        register(ForgeRegistries.RECIPE_SERIALIZERS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      villager_profession
+        register(ForgeRegistries.PROFESSIONS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      point_of_interest_type
+        register(ForgeRegistries.POI_TYPES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      memory_module_type
+        register(ForgeRegistries.MEMORY_MODULE_TYPES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      sensor_type
+        register(ForgeRegistries.SENSOR_TYPES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      schedule
+        register(ForgeRegistries.SCHEDULES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      activity
+        register(ForgeRegistries.ACTIVITIES, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      chunk_status
+        register(ForgeRegistries.CHUNK_STATUS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
 
-//      data_serializers
+        register(ForgeRegistries.DATA_SERIALIZERS, t -> JsonNull.INSTANCE, jsonElement -> () -> null);
     }
 
-    private static <T extends IForgeRegistryEntry<T>> void register(IForgeRegistry<T> forgeRegistry, Function<JsonElement, Supplier<T>> jsonParser) {
-        TYPE_MAP.put(forgeRegistry.getRegistryName(), modid -> new CustomRegistry<>(modid, forgeRegistry, jsonParser));
+    private static <T extends IForgeRegistryEntry<T>> void register(IForgeRegistry<T> forgeRegistry, Function<Supplier<T>, JsonElement> jsonBuilder, Function<JsonElement, Supplier<T>> jsonParser) {
+        TYPE_MAP.put(forgeRegistry.getRegistryName(), modid -> new CustomRegistry<>(modid, forgeRegistry, jsonBuilder, jsonParser));
     }
 
-    public static CustomRegistry<?> constructGet(ResourceLocation registry, String namespace) {
-        return TYPE_MAP.get(registry).apply(namespace);
+    public static <T extends IForgeRegistryEntry<T>> CustomRegistry<T> constructGet(ResourceLocation registry, String namespace) {
+        return (CustomRegistry<T>) TYPE_MAP.get(registry).apply(namespace);
+    }
+
+    private static @Nullable Class<?> getClass(JsonElement jsonElement, String path, Class<?> defaultClass) {
+        @Nullable Class<?> clazz = null;
+        try {
+            clazz = jsonElement.getAsJsonObject().has("class") ? Class.forName(path + jsonElement.getAsJsonObject().get("class").getAsString()) : defaultClass;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return clazz;
+    }
+    private static Object[] getParameters(JsonElement jsonElement, Constructor<?> constructor) {
+        Object[] parameters = jsonElement.getAsJsonObject().get("parameters").isJsonArray() ? new Object[jsonElement.getAsJsonObject().get("parameters").getAsJsonArray().size()] : new Object[1];
+        if(jsonElement.getAsJsonObject().get("parameters").isJsonArray()) {
+            for(int i = 0; i < parameters.length; ++ i) {
+                Class<?> parameterType = constructor.getParameterTypes()[i];
+                parameters[i] = getValueOfJsonElement(jsonElement.getAsJsonObject().get("parameters").getAsJsonArray().get(i), parameterType);
+            }
+        } else {
+            Class<?> parameterType = constructor.getParameterTypes()[0];
+            parameters[0] = getValueOfJsonElement(jsonElement.getAsJsonObject().get("parameters"), parameterType);
+        }
+        return parameters;
+    }
+    private static Object getValueOfJsonElement(JsonElement jsonElement, Class<?> clazz) {
+        if(clazz.equals(int.class)) {
+            return jsonElement.getAsInt();
+        } else if(clazz.equals(float.class)) {
+            return jsonElement.getAsFloat();
+        } else if(clazz.equals(boolean.class)) {
+            return jsonElement.getAsBoolean();
+        } else if(clazz.equals(byte.class)) {
+            return jsonElement.getAsByte();
+        } else if(clazz.equals(char.class)) {
+            return jsonElement.getAsCharacter();
+        } else if(clazz.equals(double.class)) {
+            return jsonElement.getAsDouble();
+        } else if(clazz.equals(long.class)) {
+            return jsonElement.getAsLong();
+        } else if(clazz.equals(short.class)) {
+            return jsonElement.getAsShort();
+        } else {
+            if(clazz.isArray()) {
+                Object[] array = new Object[jsonElement.getAsJsonArray().size()];
+                for(int i = 0; i < array.length; ++ i) {
+                    array[i] = getValueOfJsonElement(jsonElement.getAsJsonArray().get(i), clazz.componentType());
+                }
+                return array;
+            } else {
+                return Serializers.deserialize(clazz, jsonElement);
+            }
+        }
     }
 }
