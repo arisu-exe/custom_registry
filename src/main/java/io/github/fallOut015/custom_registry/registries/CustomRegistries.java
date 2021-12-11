@@ -60,7 +60,7 @@ public class CustomRegistries {
                     } else if(parameterType.equals(short.class)) {
                         parameters[i] = object.get("parameters").getAsJsonArray().get(i).getAsShort();
                     } else {
-                        parameters[i] = Serializers.getSerializer(parameterType).deserialize(object.get("parameters").getAsJsonArray().get(i));
+                        parameters[i] = Serializers.deserialize(parameterType, object.get("parameters").getAsJsonArray().get(i));
                     }
                 }
 
@@ -92,7 +92,7 @@ public class CustomRegistries {
                 } else if(parameterType.equals(short.class)) {
                     parameter = object.get("parameters").getAsShort();
                 } else {
-                    parameter = Serializers.getSerializer(parameterType).deserialize(object.get("parameters").getAsJsonObject());
+                    parameter = Serializers.deserialize(parameterType, object.get("parameters").getAsJsonObject());
                 }
 
                 Object finalParameter = parameter;
@@ -152,11 +152,11 @@ public class CustomRegistries {
 //      data_serializers
     }
 
-    public static CustomRegistry<?> constructGet(ResourceLocation registry, String namespace) {
-        return TYPE_MAP.get(registry).apply(namespace);
-    }
-
     private static <T extends IForgeRegistryEntry<T>> void register(IForgeRegistry<T> forgeRegistry, Function<JsonElement, Supplier<T>> jsonParser) {
         TYPE_MAP.put(forgeRegistry.getRegistryName(), modid -> new CustomRegistry<>(modid, forgeRegistry, jsonParser));
+    }
+
+    public static CustomRegistry<?> constructGet(ResourceLocation registry, String namespace) {
+        return TYPE_MAP.get(registry).apply(namespace);
     }
 }

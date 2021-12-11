@@ -26,10 +26,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Serializers {
-    /*static class Map<T> {
-        static SerializerType<?> SERIALIZER_TYPE;
-    }*/
-    static final Map<Class<?>, SerializerType<?>> CLASS_MAP;
+    private static final Map<Class<?>, SerializerType<?>> CLASS_MAP;
 
     static {
         CLASS_MAP = new HashMap<>();
@@ -77,7 +74,7 @@ public class Serializers {
             boolean ambient = jsonObject.has("ambient") && jsonObject.get("ambient").getAsBoolean();
             boolean visible = !jsonObject.has("visible") || jsonObject.get("visible").getAsBoolean();
             boolean showIcon = jsonObject.has("show_icon") ? jsonObject.get("show_icon").getAsBoolean() : visible;
-            @Nullable MobEffectInstance hiddenEffect = jsonObject.has("hidden_effect") ? (MobEffectInstance) Serializers.getSerializer(MobEffectInstance.class).deserialize(jsonObject.get("hidden_effect").getAsJsonObject()) : null;
+            @Nullable MobEffectInstance hiddenEffect = jsonObject.has("hidden_effect") ? Serializers.deserialize(MobEffectInstance.class, jsonObject.get("hidden_effect").getAsJsonObject()) : null;
             return new MobEffectInstance(mobEffect, duration, amplifier, ambient, visible, showIcon, hiddenEffect);
         });
 
@@ -187,11 +184,11 @@ public class Serializers {
             if(food.has("effects")) {
                 if(food.get("effects").isJsonArray()) {
                     food.get("effects").getAsJsonArray().forEach(effect -> {
-                        foodProperties$Builder.effect(() -> (MobEffectInstance) Serializers.getSerializer(MobEffectInstance.class).deserialize(effect.getAsJsonObject().get("effect_in").getAsJsonObject()), effect.getAsJsonObject().get("probability").getAsFloat());
+                        foodProperties$Builder.effect(() -> Serializers.deserialize(MobEffectInstance.class, effect.getAsJsonObject().get("effect_in").getAsJsonObject()), effect.getAsJsonObject().get("probability").getAsFloat());
                     });
                 } else {
                     JsonObject effect = food.get("effects").getAsJsonObject();
-                    foodProperties$Builder.effect(() -> (MobEffectInstance) Serializers.getSerializer(MobEffectInstance.class).deserialize(effect.get("effect_in").getAsJsonObject()), effect.get("probability").getAsFloat());
+                    foodProperties$Builder.effect(() -> Serializers.deserialize(MobEffectInstance.class, effect.get("effect_in").getAsJsonObject()), effect.get("probability").getAsFloat());
                 }
             }
             return foodProperties$Builder.build();
@@ -329,7 +326,7 @@ public class Serializers {
             JsonObject properties = jsonElement.getAsJsonObject();
             Item.Properties item$properties = new Item.Properties();
             if(properties.has("food")) {
-                item$properties.food((FoodProperties) Serializers.getSerializer(FoodProperties.class).deserialize(properties.get("food")));
+                item$properties.food(Serializers.deserialize(FoodProperties.class, properties.get("food")));
             }
             if(properties.has("stacks_to")) {
                 item$properties.stacksTo(properties.get("stacks_to").getAsInt());
@@ -341,13 +338,13 @@ public class Serializers {
                 item$properties.durability(properties.get("durability").getAsInt());
             }
             if(properties.has("craft_remainder")) {
-                item$properties.craftRemainder((Item) Serializers.getSerializer(Item.class).deserialize(properties.get("craft_remainder")));
+                item$properties.craftRemainder(Serializers.deserialize(Item.class, properties.get("craft_remainder")));
             }
             if(properties.has("tab")) {
-                item$properties.tab((CreativeModeTab) Serializers.getSerializer(CreativeModeTab.class).deserialize(properties.get("tab")));
+                item$properties.tab(Serializers.deserialize(CreativeModeTab.class, properties.get("tab")));
             }
             if(properties.has("rarity")) {
-                item$properties.rarity((Rarity) Serializers.getSerializer(Rarity.class).deserialize(properties.get("rarity")));
+                item$properties.rarity(Serializers.deserialize(Rarity.class, properties.get("rarity")));
             }
             if(properties.has("fire_resistant") && properties.get("fire_resistant").getAsBoolean()) {
                 item$properties.fireResistant();
@@ -369,8 +366,8 @@ public class Serializers {
         CLASS_MAP.put(clazz, new SerializerType<>(serializer, deserializer));
     }
 
-    public static SerializerType<?> getSerializer(Class<?> clazz) {
-        return CLASS_MAP.get(clazz);
+    public static <T> T deserialize(Class<T> clazz, JsonElement jsonElement) {
+        return (T) CLASS_MAP.get(clazz).deserialize(jsonElement);
     }
     public static <T> JsonElement serialize(T t) {
         return CLASS_MAP.get(t.getClass()).serialize(t);
