@@ -47,13 +47,13 @@ public class MainCustomRegistry {
 
     public MainCustomRegistry() {
         System.out.println("Loading registry packs...");
-        File clientRegistry = new File("../run/registrypacks");
+        File clientRegistry = new File("registrypacks");
         @Nullable String[] registryPacks = clientRegistry.list((current, name) -> new File(current, name).isDirectory());
         if(registryPacks != null) {
             for(String registryPack : registryPacks) {
                 JsonElement pack = null;
                 try {
-                    pack = new JsonParser().parse(new JsonReader(new FileReader("../run/registrypacks/" + registryPack + "/pack.mcmeta")));
+                    pack = new JsonParser().parse(new JsonReader(new FileReader("registrypacks/" + registryPack + "/pack.mcmeta")));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -62,11 +62,11 @@ public class MainCustomRegistry {
                 } else {
                     System.err.println("missing pack.mcmeta");
                 }
-                @Nullable String[] namespaces = new File("../run/registrypacks/" + registryPack).list((current, name) -> new File(current, name).isDirectory());
+                @Nullable String[] namespaces = new File("registrypacks/" + registryPack).list((current, name) -> new File(current, name).isDirectory());
                 if(namespaces != null) {
                     for(String namespace : namespaces) {
                         System.out.println("\t\tLoading namespace " + namespace);
-                        @Nullable String[] registries = new File("../run/registrypacks/" + registryPack + "/" + namespace).list((current, name) -> new File(current, name).isDirectory());
+                        @Nullable String[] registries = new File("registrypacks/" + registryPack + "/" + namespace).list((current, name) -> new File(current, name).isDirectory());
                         if(registries != null) {
                             for(String registry : registries) {
                                 System.out.println("\t\t\tLoading registry " + registry);
@@ -79,7 +79,7 @@ public class MainCustomRegistry {
                                     CUSTOM_REGISTRIES.add(customRegistry);
                                 }
                                 try {
-                                    Files.walk(Paths.get("../run/registrypacks/" + registryPack + "/" + namespace + "/" + registry)).filter(Files::isRegularFile).forEach(path -> {
+                                    Files.walk(Paths.get("registrypacks/" + registryPack + "/" + namespace + "/" + registry)).filter(Files::isRegularFile).forEach(path -> {
                                         JsonElement jsonElement = null;
                                         try {
                                             jsonElement = new JsonParser().parse(new JsonReader(new FileReader(path.toFile())));

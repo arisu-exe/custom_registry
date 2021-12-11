@@ -4,7 +4,10 @@ import com.google.gson.JsonElement;
 
 import java.util.function.Function;
 
-public record Serializer<T>(Function<JsonElement, T> deserializer) {
+public record SerializerType<T>(Function<T, JsonElement> serializer, Function<JsonElement, T> deserializer) {
+    public JsonElement serialize(Object t) {
+        return this.serializer.apply((T) t);
+    }
     public T deserialize(JsonElement jsonElement) {
         return this.deserializer.apply(jsonElement);
     }
